@@ -1,7 +1,27 @@
-import React from 'react'
+import React from 'react';
 
-export default function SearchResults() {
+interface IResponse {
+  sickCd: string;
+  sickNm: string;
+}
+
+export default function SearchResults(props: any) {
+  const { relativeSearchWords } = props;
   return (
-    <div>SearchResults</div>
-  )
+    <div>
+      {' '}
+      {relativeSearchWords.length > 0 ? (
+        relativeSearchWords.map(
+          (word: IResponse) =>
+            word && (
+              <div key={word.sickCd}>
+                <p>{word.sickNm}</p>
+              </div>
+            ),
+        )
+      ) : (
+        <p>검색어 없음</p>
+      )}
+    </div>
+  );
 }
