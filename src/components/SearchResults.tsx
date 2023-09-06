@@ -6,10 +6,10 @@ interface IResponse {
 }
 
 export default function SearchResults(props: any) {
-  const { relativeSearchWords } = props;
+  const { relativeSearchWords, focusIdx } = props;
+  console.log(focusIdx);
   return (
     <div>
-      {' '}
       {relativeSearchWords.length > 0 ? (
         relativeSearchWords.map(
           (word: IResponse) =>

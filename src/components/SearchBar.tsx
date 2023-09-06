@@ -1,20 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import fetchData from '../utils/fetchData';
 
-interface IResponse {
-  sickCd: string;
-  sickNm: string;
-}
-
 export default function SearchBar(props: any) {
-  const { setRelativeSearchWords } = props;
+  const { setRelativeSearchWords, setFocusIdx } = props;
   const [searchValue, setSearchValue] = useState('');
   const [timer, setTimer] = useState<NodeJS.Timeout>(); // 디바운싱 타이머
 
   const onChangeInputs = (e: any) => {
     setSearchValue(e.target.value);
-
     const newSearchValue = e.target.value;
+
     if (timer) {
       clearTimeout(timer);
     }
@@ -30,9 +25,12 @@ export default function SearchBar(props: any) {
   const callback = async (newSearchValue: string) => {
     try {
       if (newSearchValue) {
-        console.info('calling api');
         const res = await fetchData(newSearchValue);
-        setRelativeSearchWords(res);
+        if (res.length > 10) {
+          setRelativeSearchWords(res.splice(0, 10));
+        } else {
+          setRelativeSearchWords(res);
+        }
       } else {
         setRelativeSearchWords([]);
       }
@@ -42,9 +40,18 @@ export default function SearchBar(props: any) {
     }
   };
 
+  const changeFocus = (e: any) => {
+    console.log(e.code);
+    if (e.code === 'ArrowDown') {
+      setFocusIdx((prev: number) => prev - 1);
+    } else if (e.code === 'ArrowUp') {
+      setFocusIdx((prev: number) => prev + 1);
+    }
+  };
+
   return (
     <div>
-      <input type='text' value={searchValue} onChange={onChangeInputs} />
+      <input type='text' value={searchValue} onChange={onChangeInputs} onKeyUp={changeFocus} />
       <button>검색</button>
     </div>
   );
