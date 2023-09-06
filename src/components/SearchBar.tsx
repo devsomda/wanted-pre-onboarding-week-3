@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import fetchData from '../utils/fetchData';
 
 export default function SearchBar(props: any) {
-  const { setRelativeSearchWords, setFocusIdx } = props;
+  const { changeFocus, relativeSearchWords, setRelativeSearchWords, focusIdx, setFocusIdx } = props;
   const [searchValue, setSearchValue] = useState('');
   const [timer, setTimer] = useState<NodeJS.Timeout>(); // 디바운싱 타이머
 
@@ -37,15 +37,6 @@ export default function SearchBar(props: any) {
     } catch (error) {
       // 오류 처리
       console.error(error);
-    }
-  };
-
-  const changeFocus = (e: any) => {
-    console.log(e.code);
-    if (e.code === 'ArrowDown') {
-      setFocusIdx((prev: number) => prev - 1);
-    } else if (e.code === 'ArrowUp') {
-      setFocusIdx((prev: number) => prev + 1);
     }
   };
 

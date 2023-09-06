@@ -6,15 +6,21 @@ interface IResponse {
 }
 
 export default function SearchResults(props: any) {
-  const { relativeSearchWords, focusIdx } = props;
+  const { changeFocus, relativeSearchWords, focusIdx } = props;
   console.log(focusIdx);
   return (
     <div>
       {relativeSearchWords.length > 0 ? (
         relativeSearchWords.map(
-          (word: IResponse) =>
+          (word: IResponse, idx: number) =>
             word && (
-              <div key={word.sickCd}>
+              <div
+                key={word.sickCd}
+                style={
+                  focusIdx === idx ? { border: '1px solid red' } : { border: '1px solid black' }
+                }
+                onKeyUp={changeFocus}
+              >
                 <p>{word.sickNm}</p>
               </div>
             ),
