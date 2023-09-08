@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import fetchData from '../utils/fetchData';
+import styled from 'styled-components';
 
 export default function SearchBar(props: any) {
   const { changeFocus, relativeSearchWords, setRelativeSearchWords, focusIdx, setFocusIdx } = props;
@@ -7,6 +8,7 @@ export default function SearchBar(props: any) {
   const [timer, setTimer] = useState<NodeJS.Timeout>(); // 디바운싱 타이머
 
   const onChangeInputs = (e: any) => {
+    setFocusIdx(-1);
     setSearchValue(e.target.value);
     const newSearchValue = e.target.value;
 
@@ -14,7 +16,6 @@ export default function SearchBar(props: any) {
       clearTimeout(timer);
     }
 
-    // Question: focus가 되고, 안 되는 것도 change event로 인식함
     const newTimer = setTimeout(async () => {
       await callback(newSearchValue);
     }, 700);
@@ -41,9 +42,33 @@ export default function SearchBar(props: any) {
   };
 
   return (
-    <div>
+    <SearchBarContainer>
       <input type='text' value={searchValue} onChange={onChangeInputs} onKeyUp={changeFocus} />
       <button>검색</button>
-    </div>
+    </SearchBarContainer>
   );
 }
+
+const SearchBarContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid gray;
+  border-radius: 10px;
+
+  input,
+  button {
+    margin: 10px;
+    border: none;
+    background-color: inherit;
+  }
+  input {
+    width: 250px;
+    &:focus,
+    &:focus-visible {
+      outline: none;
+    }
+  }
+  button {
+    border-left: 1px solid gray;
+  }
+`;
