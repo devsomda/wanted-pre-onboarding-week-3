@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SearchBar from './SearchBar';
 import SearchResults from './SearchResults';
+import styled from 'styled-components';
 
 interface IResponse {
   sickCd: string;
@@ -22,7 +23,7 @@ export default function Search() {
   };
 
   return (
-    <div>
+    <SearchContainer>
       <SearchBar
         relativeSearchWords={relativeSearchWords}
         setRelativeSearchWords={setRelativeSearchWords}
@@ -35,6 +36,10 @@ export default function Search() {
         focusIdx={focusIdx}
         changeFocus={changeFocus}
       />
-    </div>
+    </SearchContainer>
   );
 }
+
+const SearchContainer = styled.div`
+  margin-top: 20px;
+`;
