@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 interface IResponse {
   sickCd: string;
@@ -7,7 +8,7 @@ interface IResponse {
 
 export default function SearchResults(props: any) {
   const { changeFocus, relativeSearchWords, focusIdx } = props;
-  console.log(focusIdx);
+
   return (
     <div>
       {relativeSearchWords.length > 0 ? (
