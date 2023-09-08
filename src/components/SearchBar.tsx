@@ -43,7 +43,7 @@ export default function SearchBar(props: any) {
 
   return (
     <SearchBarContainer>
-      <input type='text' value={searchValue} onChange={onChangeInputs} onKeyUp={changeFocus} />
+      <input type='text' value={searchValue} onChange={onChangeInputs} onKeyDown={changeFocus} />
       <button>검색</button>
     </SearchBarContainer>
   );
