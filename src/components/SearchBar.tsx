@@ -1,56 +1,49 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
+import fetchData from '../utils/fetchData';
 
-interface resType {
-  sickCd: string;
-  sickNm: string;
-}
-
-export default function SearchBar() {
+export default function SearchBar(props: any) {
+  const { changeFocus, relativeSearchWords, setRelativeSearchWords, focusIdx, setFocusIdx } = props;
   const [searchValue, setSearchValue] = useState('');
-  const [relativeSearchWords, setRelativeSearchWords] = useState<resType[]>([]);
-  const [timer, setTimer] = useState<number | NodeJS.Timeout>(0); // 디바운싱 타이머
+  const [timer, setTimer] = useState<NodeJS.Timeout>(); // 디바운싱 타이머
 
   const onChangeInputs = (e: any) => {
     setSearchValue(e.target.value);
     const newSearchValue = e.target.value;
 
     if (timer) {
-      console.log('clear timer');
       clearTimeout(timer);
     }
 
-    const newTimer = setTimeout(() => {
-      fetch(`http://localhost:4000/sick?q=${newSearchValue}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-          }
-          return res.json();
-        })
-        .then((data) => {
-          console.log(data);
-          setRelativeSearchWords(data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }, 800);
+    // Question: focus가 되고, 안 되는 것도 change event로 인식함
+    const newTimer = setTimeout(async () => {
+      await callback(newSearchValue);
+    }, 700);
 
     setTimer(newTimer);
   };
 
+  const callback = async (newSearchValue: string) => {
+    try {
+      if (newSearchValue) {
+        const res = await fetchData(newSearchValue);
+        if (res.length > 10) {
+          setRelativeSearchWords(res.splice(0, 10));
+        } else {
+          setRelativeSearchWords(res);
+        }
+      } else {
+        setRelativeSearchWords([]);
+      }
+    } catch (error) {
+      // 오류 처리
+      console.error(error);
+    }
+  };
+
   return (
     <div>
-      <input type='text' value={searchValue} onChange={onChangeInputs} />
+      <input type='text' value={searchValue} onChange={onChangeInputs} onKeyUp={changeFocus} />
       <button>검색</button>
-      {relativeSearchWords.map(
-        (word: resType) =>
-          word && (
-            <div key={word.sickCd}>
-              <p>{word.sickNm}</p>
-            </div>
-          ),
-      )}
     </div>
   );
 }
