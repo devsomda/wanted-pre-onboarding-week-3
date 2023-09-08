@@ -24,7 +24,6 @@ export default async function fetchData(queryData: string) {
   }
 
   const clonedResponse = response.clone();
-  console.log(clonedResponse, '복제된 값');
   await cacheStorage.put(url, clonedResponse); // 복제본을 캐시에 저장
 
   const data = await response.json();
