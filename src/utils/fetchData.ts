@@ -1,6 +1,6 @@
 import React from 'react';
 
-const baseUrl = 'http://localhost:4000/';
+const baseUrl = process.env.REACT_APP_JSON_SERVER_URL;
 const requestUrl = 'sick?q=';
 
 export default async function fetchData(queryData: string) {
@@ -9,11 +9,15 @@ export default async function fetchData(queryData: string) {
   const cachedResponse = await cacheStorage.match(url);
   if (cachedResponse && cachedResponse.ok) {
     const data = await cachedResponse.json();
-    console.log(data, '저장된 값');
     return data;
   }
-  console.info('calling apid');
-  const response = await fetch(url);
+  console.info('calling api');
+  console.log(baseUrl);
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application / json',
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
